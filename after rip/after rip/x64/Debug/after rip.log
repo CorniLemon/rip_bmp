@@ -1,0 +1,4 @@
+﻿  Source.cpp
+C:\Users\Наталья\Desktop\работа\after rip\after rip\Source.cpp(54,120): warning C4267: =: преобразование из "size_t" в "DWORD"; возможна потеря данных
+C:\Users\Наталья\Desktop\работа\after rip\after rip\Source.cpp(75,43): warning C4267: аргумент: преобразование из "size_t" в "long"; возможна потеря данных
+  after rip.vcxproj -> C:\Users\Наталья\Desktop\работа\after rip\x64\Debug\after rip.exe

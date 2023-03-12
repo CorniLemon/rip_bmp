@@ -1,0 +1,28 @@
+#include <iostream>
+#include <string>
+#include<stdio.h>
+#include<stdlib.h>
+#include<fstream>
+#include <algorithm>
+#include <Windows.h>
+using namespace std;
+
+struct head {
+
+};
+
+void red(int A, int B) {
+	int siseX, siseY;
+
+}
+
+int main() {
+	setlocale(LC_ALL, "Russian");
+
+	int A, B;
+	cout << "введите правило прореживания изображения в формате A B\nгде\nA - количество сохраняемых строк/столбцов\nB - количество удаляемых строк/столбцов\n";
+	cin >> A;
+	cin >> B;
+	//cout <<A<<' '<<B;
+	return 0;
+}//*/

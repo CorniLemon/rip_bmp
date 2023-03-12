@@ -1,0 +1,84 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
+#include <conio.h>
+using namespace std;
+
+typedef unsigned __int16 WORD;//2 байта
+typedef unsigned int DWORD;//4 байта
+typedef long LONG;//4 байта
+typedef unsigned char BYTE;//1 байт
+
+typedef struct tagBITMAPFILEHEADER {
+    WORD  bfType;
+    DWORD bfSize;
+    WORD  bfReserved1;
+    WORD  bfReserved2;
+    DWORD bfOffBits;
+} BITMAPFILEHEADER, * LPBITMAPFILEHEADER, * PBITMAPFILEHEADER;
+
+typedef struct tagBITMAPINFOHEADER {
+    DWORD biSize;
+    LONG  biWidth;
+    LONG  biHeight;
+    WORD  biPlanes;
+    WORD  biBitCount;
+    DWORD biCompression;
+    DWORD biSizeImage;
+    LONG  biXPelsPerMeter;
+    LONG  biYPelsPerMeter;
+    DWORD biClrUsed;
+    DWORD biClrImportant;
+} BITMAPINFOHEADER, * LPBITMAPINFOHEADER, * PBITMAPINFOHEADER;
+
+typedef struct tagRGBTRIPLE {
+    BYTE rgbtBlue;
+    BYTE rgbtGreen;
+    BYTE rgbtRed;
+} RGBTRIPLE, * PRGBTRIPLE, * NPRGBTRIPLE, * LPRGBTRIPLE;
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+
+    // Объявляем структуры
+    BITMAPFILEHEADER bfh_l;
+    BITMAPINFOHEADER bih_l;
+    RGBTRIPLE rgb_l;
+    
+    cout << "работаем ";
+
+    FILE* f1, * f2;
+
+    f1 = fopen("1.bmp", "r+b");
+    f2 = fopen("2.bmp", "w+b");
+
+
+    fread(&bfh_l, sizeof(bfh_l), 1, f1);       //Запихиваем файловый заголовок в структуру BITMAPFILEHEADER
+    fwrite(&bfh_l, sizeof(bfh_l), 1, f2);   //
+    fread(&bih_l, sizeof(bih_l), 1, f1);       //Запихиваем заголовок изображения в структуру BITMAPINFOHEADER
+    fwrite(&bih_l, sizeof(bih_l), 1, f2);   //
+
+    size_t padding = 0;
+    if ((bih_l.biWidth * 3) % 4) padding = 4 - (bih_l.biWidth * 3) % 4;
+
+    for (int i = 0; i < bih_l.biHeight; i++){
+        for (int j = 0; j < bih_l.biWidth; j++){
+
+            fread(&rgb_l, sizeof(rgb_l), 1, f1);
+            fwrite(&rgb_l, sizeof(rgb_l), 1, f2);
+        }
+        for (size_t t = 0; t < padding; ++t) {
+            fread(&rgb_l, sizeof(rgb_l), 1, f1);
+            fwrite(&rgb_l, sizeof(rgb_l), 1, f2);
+        }
+    }
+
+    fclose(f1);
+    fclose(f2);
+
+    cout << "закончили";
+
+    return 0;
+}

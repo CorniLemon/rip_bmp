@@ -1,0 +1,125 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
+#include <conio.h>
+using namespace std;
+
+typedef unsigned __int16 WORD;//2 байта
+typedef unsigned int DWORD;//4 байта
+typedef long LONG;//4 байта
+typedef unsigned char BYTE;//1 байт
+
+typedef struct tagBITMAPFILEHEADER {
+    WORD  bfType;
+    DWORD bfSize;
+    WORD  bfReserved1;
+    WORD  bfReserved2;
+    DWORD bfOffBits;
+} BITMAPFILEHEADER, * LPBITMAPFILEHEADER, * PBITMAPFILEHEADER;
+
+typedef struct tagBITMAPINFOHEADER {
+    DWORD biSize;
+    LONG  biWidth;
+    LONG  biHeight;
+    WORD  biPlanes;
+    WORD  biBitCount;
+    DWORD biCompression;
+    DWORD biSizeImage;
+    LONG  biXPelsPerMeter;
+    LONG  biYPelsPerMeter;
+    DWORD biClrUsed;
+    DWORD biClrImportant;
+} BITMAPINFOHEADER, * LPBITMAPINFOHEADER, * PBITMAPINFOHEADER;
+
+typedef struct tagRGBTRIPLE {
+    BYTE rgbtBlue;
+    BYTE rgbtGreen;
+    BYTE rgbtRed;
+} RGBTRIPLE, * PRGBTRIPLE, * NPRGBTRIPLE, * LPRGBTRIPLE;
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+
+    // Объявляем структуры
+    BITMAPFILEHEADER bfh_l;
+    BITMAPINFOHEADER bih_l;
+    RGBTRIPLE rgb_l;
+
+    cout << "работаем \n\n";
+    int A, B;
+    cout << "введите правило прореживания изображения в формате A B\nгде\nA - количество сохраняемых строк/столбцов\nB - количество удаляемых строк/столбцов\n";
+    cin >> A;
+    cin >> B;
+    cout << A << ' ' << B;
+
+    FILE* f1, * f2;
+
+    f1 = fopen("pic1.bmp", "r+b");
+    f2 = fopen("pic2.bmp", "w+b");
+
+    bih_l.biWidth = 0;
+    bih_l.biHeight = 0;
+    size_t padding = 0;
+
+    int ost;//промежуточные расчёты
+    fread(&bfh_l, sizeof(bfh_l), 1, f1);       //Запихиваем файловый заголовок в структуру BITMAPFILEHEADER
+
+    ost = bih_l.biWidth % (A + B);// изменение ширины
+    bih_l.biWidth = bih_l.biWidth - bih_l.biWidth * B / (A + B);
+    if (ost > A)
+        bih_l.biWidth += A - ost;
+    if ((bih_l.biWidth * 3) % 4)
+        //bih_l.biWidth += 4 - (bih_l.biWidth * 3) % 4;
+        if ((bih_l.biWidth * 3) % 4) padding = 4 - (bih_l.biWidth * 3) % 4;
+
+    ost = bih_l.biHeight % (A + B);// изменение количества строк
+    bih_l.biHeight = bih_l.biHeight - bih_l.biHeight * B / (A + B);
+    if (ost > A)
+        bih_l.biHeight += A - ost;
+
+    fwrite(&bfh_l, sizeof(bfh_l), 1, f2);   //
+    fread(&bih_l, sizeof(bih_l), 1, f1);       //Запихиваем заголовок изображения в структуру BITMAPINFOHEADER
+
+    fwrite(&bih_l, sizeof(bih_l), 1, f2);   //
+
+    //int count = 0;//счётчик, чтобы прореживать
+    //for (int i = 0; i < bih_l.biHeight; i++)
+    //{
+    //    for (int j = 0; j < bih_l.biWidth; j++)
+    //    {
+    //        count++;
+    //        fread(&rgb_l, sizeof(rgb_l), 1, f1);
+
+    //        fwrite(&rgb_l, sizeof(rgb_l), 1, f2);
+    //    }
+
+    //}
+
+    int countHeight = 0;
+    int countWidth = 0;
+    for (int i = 0; i < bih_l.biHeight; i++) {//перебор строк
+        countWidth = 0;
+        if (countHeight % (A + B) <= A) {
+            for (int j = 0; j < bih_l.biWidth; j++) {//перебор байтов в строке
+                fread(&rgb_l, sizeof(rgb_l), 1, f1);
+                if (countWidth % (A + B) <= A)
+                    fwrite(&rgb_l, sizeof(rgb_l), 1, f2);
+                countWidth++;
+            }
+            for (size_t t = 0; t < padding; ++t) {
+                fread(&rgb_l, sizeof(rgb_l), 1, f1);
+                fwrite(&rgb_l, sizeof(rgb_l), 1, f2);
+            }
+        }
+        countHeight++;
+    }
+
+    fclose(f1);
+    fclose(f2);
+
+    cout << "закончили";
+
+    return 0;
+}
