@@ -1,5 +1,0 @@
-﻿  Source.cpp
-C:\Users\Наталья\Desktop\работа\задание 1\o rip\o rip\Source.cpp(75,124): warning C4267: =: преобразование из "size_t" в "DWORD"; возможна потеря данных
-C:\Users\Наталья\Desktop\работа\задание 1\o rip\o rip\Source.cpp(108,84): warning C4267: аргумент: преобразование из "size_t" в "long"; возможна потеря данных
-C:\Users\Наталья\Desktop\работа\задание 1\o rip\o rip\Source.cpp(142,16): warning C4101: k: неиспользованная локальная переменная
-  o rip.vcxproj -> C:\Users\Наталья\Desktop\работа\задание 1\o rip\x64\Debug\o rip.exe
