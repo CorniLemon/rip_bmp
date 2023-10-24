@@ -1,4 +1,4 @@
 ﻿  Source.cpp
-C:\Users\Наталья\Desktop\работа\rip_bmp\5версия\5 rip\5 rip\Source.cpp(99,124): warning C4267: =: преобразование из "size_t" в "DWORD"; возможна потеря данных
-C:\Users\Наталья\Desktop\работа\rip_bmp\5версия\5 rip\5 rip\Source.cpp(125,84): warning C4267: аргумент: преобразование из "size_t" в "long"; возможна потеря данных
+C:\Users\Наталья\Desktop\работа\rip_bmp\5версия\5 rip\5 rip\Source.cpp(95,124): warning C4267: =: преобразование из "size_t" в "DWORD"; возможна потеря данных
+C:\Users\Наталья\Desktop\работа\rip_bmp\5версия\5 rip\5 rip\Source.cpp(120,91): warning C4267: аргумент: преобразование из "size_t" в "long"; возможна потеря данных
   5 rip.vcxproj -> C:\Users\Наталья\Desktop\работа\rip_bmp\5версия\5 rip\x64\Debug\5 rip.exe
